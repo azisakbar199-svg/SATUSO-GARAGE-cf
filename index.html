@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SATUSO GARAGE - Kasir & Manajemen Bengkel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neon: '#ec4899',
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-darkBg text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-cardBg border-b border-slate-800 sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full border-2 border-neon overflow-hidden flex items-center justify-center bg-black">
+                <img src="logo.png" alt="Logo" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <h1 class="font-black tracking-wider text-neon text-lg">SATUSO GARAGE</h1>
+                <p class="text-xs text-slate-400">Sleman, Yogyakarta - EV & General Workshop</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-sm bg-neon text-white font-medium transition shadow-md shadow-neon/30"><i class="fa-solid fa-chart-pie mr-1"></i> Dashboard</button>
+            <button onclick="switchTab('transactions')" id="nav-transactions" class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition"><i class="fa-solid fa-receipt mr-1"></i> Transaksi</button>
+            <button onclick="switchTab('inventory')" id="nav-inventory" class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition"><i class="fa-solid fa-boxes-stacked mr-1"></i> Stok</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 pb-24">
+        <!-- TAB: DASHBOARD -->
+        <section id="tab-dashboard" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-cardBg border border-slate-800 p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="absolute right-4 top-4 text-emerald-500 text-3xl opacity-20"><i class="fa-solid fa-wallet"></i></div>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Pemasukan</p>
+                    <h3 class="text-2xl font-bold text-emerald-400 mt-2" id="sum-income">Rp 5.400.000</h3>
+                    <span class="text-xs text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded mt-2 inline-block"><i class="fa-solid fa-arrow-up"></i> Hari Ini</span>
+                </div>
+                <div class="bg-cardBg border border-slate-800 p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="absolute right-4 top-4 text-rose-500 text-3xl opacity-20"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Pengeluaran</p>
+                    <h3 class="text-2xl font-bold text-rose-400 mt-2" id="sum-expense">Rp 1.850.000</h3>
+                    <span class="text-xs text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded mt-2 inline-block"><i class="fa-solid fa-arrow-down"></i> Hari Ini</span>
+                </div>
+                <div class="bg-cardBg border border-slate-800 p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="absolute right-4 top-4 text-neon text-3xl opacity-20"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Saldo Bersih</p>
+                    <h3 class="text-2xl font-bold text-neon mt-2" id="sum-balance">Rp 3.550.000</h3>
+                    <span class="text-xs text-neon bg-neon/10 px-2 py-0.5 rounded mt-2 inline-block"><i class="fa-solid fa-check"></i> Real-time</span>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="flex flex-wrap gap-3">
+                <button onclick="openModal('income')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-plus-circle text-lg"></i>
+                    <span>Catat Pemasukan</span>
+                </button>
+                <button onclick="openModal('expense')" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-medium py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-minus-circle text-lg"></i>
+                    <span>Catat Pengeluaran</span>
+                </button>
+            </div>
+
+            <!-- Recent Transactions & Quick Print -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg text-slate-200">Transaksi Terkini</h3>
+                        <button onclick="switchTab('transactions')" class="text-xs text-neon hover:underline">Lihat Semua</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="text-slate-400 border-b border-slate-800">
+                                <tr>
+                                    <th class="pb-3">Keterangan</th>
+                                    <th class="pb-3">Kategori</th>
+                                    <th class="pb-3 text-right">Jumlah</th>
+                                    <th class="pb-3 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboard-tx-list" class="divide-y divide-slate-800/60">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Receipt Preview Card -->
+                <div class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-lg text-slate-200">Pratinjau Nota</h3>
+                            <span class="text-xs bg-neon/20 text-neon px-2 py-0.5 rounded">Thermal 58mm</span>
+                        </div>
+                        <div class="bg-white text-slate-900 p-4 rounded-xl font-mono text-xs shadow-inner space-y-2 border border-slate-300">
+                            <div class="text-center font-bold border-b pb-2">
+                                <p class="text-sm text-pink-600 font-black">SATUSO GARAGE</p>
+                                <p class="text-[10px] text-slate-600">Sleman, Yogyakarta</p>
+                                <p class="text-[10px] text-slate-500">Nota: #INV00145</p>
+                            </div>
+                            <div class="py-1 border-b text-[11px] space-y-0.5">
+                                <div class="flex justify-between"><span>Pelanggan:</span><span class="font-semibold">Budi Santoso</span></div>
+                                <div class="flex justify-between"><span>Kendaraan:</span><span>Honda Beat (AB 1234 XY)</span></div>
+                            </div>
+                            <div class="space-y-1 py-1 border-b">
+                                <div class="flex justify-between"><span>Jasa Servis</span><span>Rp 150.000</span></div>
+                                <div class="flex justify-between"><span>Oli Mesin AHM</span><span>Rp 75.000</span></div>
+                            </div>
+                            <div class="flex justify-between font-bold pt-1 text-sm">
+                                <span>TOTAL:</span>
+                                <span class="text-pink-600">Rp 225.000</span>
+                            </div>
+                            <div class="text-center text-[9px] text-slate-500 pt-2 border-t">
+                                Terima kasih atas kunjungan Anda!<br>Garansi Servis 7 Hari.
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="printReceipt()" class="mt-4 w-full bg-neon hover:bg-pink-600 text-white font-medium py-2.5 rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Cetak Struk Nota</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: TRANSACTIONS -->
+        <section id="tab-transactions" class="hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold">Riwayat Transaksi</h2>
+                <div class="flex space-x-2">
+                    <button onclick="openModal('income')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-lg font-medium"><i class="fa-solid fa-plus mr-1"></i> Pemasukan</button>
+                    <button onclick="openModal('expense')" class="bg-rose-600 hover:bg-rose-500 text-white text-xs px-3 py-2 rounded-lg font-medium"><i class="fa-solid fa-minus mr-1"></i> Pengeluaran</button>
+                </div>
+            </div>
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="text-slate-400 border-b border-slate-800">
+                            <tr>
+                                <th class="pb-3">Tanggal</th>
+                                <th class="pb-3">Keterangan</th>
+                                <th class="pb-3">Tipe</th>
+                                <th class="pb-3 text-right">Jumlah</th>
+                                <th class="pb-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="full-tx-list" class="divide-y divide-slate-800/60">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: INVENTORY -->
+        <section id="tab-inventory" class="hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold">Stok Suku Cadang & Oli</h2>
+                <button onclick="openItemModal()" class="bg-neon hover:bg-pink-600 text-white text-xs px-3 py-2 rounded-lg font-medium"><i class="fa-solid fa-box-open mr-1"></i> Tambah Barang</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="inventory-grid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Form Transaksi -->
+    <div id="tx-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-cardBg border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+            <h3 id="modal-title" class="text-lg font-bold text-slate-100">Tambah Transaksi</h3>
+            <form id="tx-form" onsubmit="handleTxSubmit(event)" class="space-y-4">
+                <input type="hidden" id="tx-type">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Keterangan / Nama Servis / Sparepart</label>
+                    <input type="text" id="tx-desc" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Jumlah (Rp)</label>
+                    <input type="number" id="tx-amount" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-neon">
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm font-medium">Batal</button>
+                    <button type="submit" class="bg-neon hover:bg-pink-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Aplikasi -->
+    <script>
+        let transactions = [
+            { id: 1, date: '2026-10-12', desc: 'Ganti Oli & Tune Up - Budi', type: 'income', amount: 225000 },
+            { id: 2, date: '2026-10-12', desc: 'Belanja Sparepart Kampas Rem', type: 'expense', amount: 150000 },
+            { id: 3, date: '2026-10-11', desc: 'Servis Kelistrikan EV - Andi', type: 'income', amount: 450000 },
+            { id: 4, date: '2026-10-10', desc: 'Beli Oli AHM & Yamalube (Dus)', type: 'expense', amount: 1200000 }
+        ];
+
+        let inventory = [
+            { name: 'Oli Mesin AHM Scooter', stock: 18, price: 55000 },
+            { name: 'Kampas Rem Depan Matic', stock: 12, price: 45000 },
+            { name: 'Busi Racing Iridium', stock: 8, price: 95000 },
+            { name: 'Air Radiator Coolant 1L', stock: 15, price: 35000 }
+        ];
+
+        function switchTab(tabId) {
+            ['dashboard', 'transactions', 'inventory'].forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                document.getElementById('nav-' + t).className = 'px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition';
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById('nav-' + tabId).className = 'px-3 py-1.5 rounded-lg text-sm bg-neon text-white font-medium transition shadow-md shadow-neon/30';
+            renderAll();
+        }
+
+        function renderAll() {
+            let totalIncome = transactions.filter(t => t.type === 'income').reduce((a, b) => a + b.amount, 0);
+            let totalExpense = transactions.filter(t => t.type === 'expense').reduce((a, b) => a + b.amount, 0);
+            let balance = totalIncome - totalExpense;
+
+            document.getElementById('sum-income').innerText = 'Rp ' + totalIncome.toLocaleString('id-ID');
+            document.getElementById('sum-expense').innerText = 'Rp ' + totalExpense.toLocaleString('id-ID');
+            document.getElementById('sum-balance').innerText = 'Rp ' + balance.toLocaleString('id-ID');
+
+            // Render Dashboard Table
+            let dashHtml = '';
+            transactions.slice(0, 5).forEach(t => {
+                dashHtml += `<tr>
+                    <td class="py-3 font-medium text-slate-200">${t.desc}</td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded text-xs ${t.type === 'income' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span></td>
+                    <td class="py-3 text-right font-bold ${t.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">Rp ${t.amount.toLocaleString('id-ID')}</td>
+                    <td class="py-3 text-center"><button onclick="deleteTx(${t.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`;
+            });
+            document.getElementById('dashboard-tx-list').innerHTML = dashHtml;
+
+            // Render Full Transactions Table
+            let fullHtml = '';
+            transactions.forEach(t => {
+                fullHtml += `<tr>
+                    <td class="py-3 text-slate-400 text-xs">${t.date}</td>
+                    <td class="py-3 font-medium text-slate-200">${t.desc}</td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded text-xs ${t.type === 'income' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span></td>
+                    <td class="py-3 text-right font-bold ${t.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">Rp ${t.amount.toLocaleString('id-ID')}</td>
+                    <td class="py-3 text-center"><button onclick="deleteTx(${t.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`;
+            });
+            document.getElementById('full-tx-list').innerHTML = fullHtml;
+
+            // Render Inventory
+            let invHtml = '';
+            inventory.forEach(i => {
+                invHtml += `<div class="bg-cardBg border border-slate-800 p-4 rounded-2xl shadow-lg flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-slate-200 text-sm">${i.name}</h4>
+                        <p class="text-xs text-slate-400 mt-1">Harga: Rp ${i.price.toLocaleString('id-ID')}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs px-2 py-1 bg-neon/10 text-neon font-bold rounded-lg">Stok: ${i.stock}</span>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('inventory-grid').innerHTML = invHtml;
+        }
+
+        function openModal(type) {
+            document.getElementById('tx-type').value = type;
+            document.getElementById('modal-title').innerText = type === 'income' ? 'Catat Pemasukan Baru' : 'Catat Pengeluaran Baru';
+            document.getElementById('tx-modal').classList.remove('hidden');
+            document.getElementById('tx-modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('tx-modal').classList.add('hidden');
+            document.getElementById('tx-modal').classList.remove('flex');
+            document.getElementById('tx-form').reset();
+        }
+
+        function handleTxSubmit(e) {
+            e.preventDefault();
+            const type = document.getElementById('tx-type').value;
+            const desc = document.getElementById('tx-desc').value;
+            const amount = parseInt(document.getElementById('tx-amount').value);
+            const today = new Date().toISOString().split('T')[0];
+
+            transactions.unshift({ id: Date.now(), date: today, desc, type, amount });
+            closeModal();
+            renderAll();
+        }
+
+        function deleteTx(id) {
+            transactions = transactions.filter(t => t.id !== id);
+            renderAll();
+        }
+
+        function openItemModal() {
+            let name = prompt("Nama Sparepart / Barang:");
+            if (!name) return;
+            let stock = parseInt(prompt("Jumlah Stok:", "10"));
+            let price = parseInt(prompt("Harga Satuan (Rp):", "50000"));
+            if (name && !isNaN(stock) && !isNaN(price)) {
+                inventory.push({ name, stock, price });
+                renderAll();
+            }
+        }
+
+        function printReceipt() {
+            window.print();
+        }
+
+        renderAll();
+    </script>
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SATUSO GARAGE - Cyber Modern Android Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        racing: ['"Racing Sans One"', 'cursive', 'sans-serif']
+                    },
+                    colors: {
+                        cyber: {
+                            950: '#030712',
+                            900: '#0b0f19',
+                            800: '#111827',
+                            700: '#1f293d',
+                            pink: '#ec4899',
+                            neon: '#f43f5e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: radial-gradient(circle at 50% 20%, #111827 0%, #030712 100%);
+            overflow-x: hidden;
+        }
+        .android-frame {
+            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.9), 0 0 0 12px #1e293b, 0 0 0 16px #0f172a, 0 0 30px rgba(236, 72, 153, 0.2);
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(236, 72, 153, 0.15);
+        }
+        .glass-card {
+            background: rgba(31, 41, 61, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(236, 72, 153, 0.5);
+            border-radius: 4px;
+        }
+        @keyframes vibrate {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        .vibrating {
+            animation: vibrate 0.2s ease-in-out infinite;
+        }
+        .glow-neon {
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.4);
+        }
+        .glow-text {
+            text-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col items-center justify-between p-4 md:p-8">
+
+    <!-- Top Studio Header -->
+    <header class="w-full max-w-6xl flex flex-col md:flex-row justify-between items-center glass-panel p-4 rounded-3xl shadow-2xl mb-6">
+        <div class="flex items-center space-x-3.5 mb-4 md:mb-0">
+            <img src="https://storage.googleapis.com/gweb-cloud-ml-us-east-4/attachments/232239.png" alt="SATUSO GARAGE Logo" class="w-12 h-12 rounded-2xl object-cover border-2 border-pink-500 glow-neon">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-base font-extrabold tracking-wider font-racing bg-gradient-to-r from-pink-400 via-white to-pink-500 bg-clip-text text-transparent glow-text">SATUSO GARAGE</h1>
+                    <span class="px-2 py-0.5 bg-pink-500/20 border border-pink-500/40 rounded-md text-[10px] font-semibold text-pink-300">v4.0 CYBER</span>
+                </div>
+                <p class="text-xs text-slate-400">Hyper-Modern Android Financial Studio</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+            <button onclick="openApkModal()" class="px-4 py-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 rounded-xl text-xs font-semibold transition flex items-center space-x-2 shadow-lg">
+                <i class="fa-brands fa-android text-pink-400 text-sm"></i>
+                <span>Download APK / Manifest</span>
+            </button>
+            <button onclick="triggerNotification('SATUSO GARAGE', 'Sistem keuangan cyber aktif dan aman.')" class="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 flex items-center justify-center text-pink-400 transition shadow-lg">
+                <i class="fa-solid fa-bell"></i>
+            </button>
+            <button onclick="resetAppData()" class="w-10 h-10 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 transition shadow-lg">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-8 my-auto">
+        
+        <!-- Left Features Panel -->
+        <div class="w-full lg:w-1/2 flex flex-col space-y-6">
+            <div class="glass-panel p-6 rounded-3xl shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="inline-block px-3.5 py-1 bg-pink-500/15 border border-pink-500/30 rounded-full text-pink-400 text-xs font-semibold mb-3">
+                    <i class="fa-solid fa-bolt mr-1"></i> Cyber-Industrial Modern UI
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold mb-3 tracking-tight">Manajemen Finansial Bengkel Masa Depan</h2>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                    Dirancang khusus dengan estetika gelap obsidian, efek kaca transparan, dan aksen neon pink. Kelola buku kas, inventaris suku cadang, dan laporan laba rugi dengan kecepatan tinggi.
+                </p>
+
+                <!-- Quick actions inside emulator wrapper -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="switchAndroidTab('dashboard')" class="glass-card p-4 rounded-2xl flex items-center space-x-3 transition group text-left hover:border-pink-500/50">
+                        <div class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center group-hover:scale-110 transition shadow-lg">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-200">Dashboard</h4>
+                            <span class="text-[11px] text-slate-400">Analitik Laba</span>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAndroidTab('transactions')" class="glass-card p-4 rounded-2xl flex items-center space-x-3 transition group text-left hover:border-emerald-500/50">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition shadow-lg">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-200">Buku Kas</h4>
+                            <span class="text-[11px] text-slate-400">Arus Masuk/Keluar</span>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAndroidTab('inventory')" class="glass-card p-4 rounded-2xl flex items-center space-x-3 transition group text-left hover:border-blue-500/50">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center group-hover:scale-110 transition shadow-lg">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-200">Sparepart</h4>
+                            <span class="text-[11px] text-slate-400">Stok & Tarif Jasa</span>
+                        </div>
+                    </button>
+
+                    <button onclick="shareViaWhatsApp()" class="glass-card p-4 rounded-2xl flex items-center space-x-3 transition group text-left hover:border-emerald-500/50 bg-emerald-950/20">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition shadow-lg">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-emerald-300">Share WA</h4>
+                            <span class="text-[11px] text-emerald-400/80">Kirim Nota</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Device status pill -->
+            <div class="glass-panel p-4 rounded-3xl shadow-xl flex items-center justify-between text-xs text-slate-400">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-3 h-3 rounded-full bg-pink-500 animate-pulse glow-neon"></div>
+                    <span>Android API 35 • Cyber Glass Engine</span>
+                </div>
+                <span class="font-mono text-pink-400">Secure AES-256</span>
+            </div>
+        </div>
+
+        <!-- Right Side: Android Phone Frame Mockup -->
+        <div class="w-full lg:w-1/2 flex justify-center items-center py-4">
+            <div id="phone-container" class="relative w-[360px] h-[720px] bg-slate-950 rounded-[50px] android-frame flex flex-col justify-between overflow-hidden select-none transition-all duration-300">
+                
+                <!-- Android Notch / Camera Hole & Speaker -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-6 bg-slate-900 rounded-b-2xl z-50 flex items-center justify-center space-x-3 border-b border-slate-800">
+                    <div class="w-3 h-3 rounded-full bg-black border border-slate-800"></div>
+                    <div class="w-12 h-1.5 rounded-full bg-slate-800"></div>
+                </div>
+
+                <!-- Android Status Bar -->
+                <div class="w-full pt-2 px-6 pb-1 bg-slate-900/95 text-white text-[11px] flex justify-between items-center z-40">
+                    <span id="phone-time" class="font-medium">12:00</span>
+                    <div class="flex items-center space-x-2 text-[10px]">
+                        <i class="fa-solid fa-signal"></i>
+                        <i class="fa-solid fa-wifi"></i>
+                        <span class="font-mono">98%</span>
+                        <i class="fa-solid fa-battery-full text-pink-400"></i>
+                    </div>
+                </div>
+
+                <!-- APP SCREEN CONTAINER INSIDE ANDROID -->
+                <div id="android-screen" class="relative flex-1 w-full bg-slate-950 flex flex-col overflow-hidden text-slate-100">
+                    <!-- Dynamic screen content injected here -->
+                </div>
+
+                <!-- Android Modern Floating Bottom Navigation -->
+                <div class="absolute bottom-3 left-4 right-4 h-14 bg-slate-900/90 backdrop-blur-xl border border-pink-500/20 rounded-2xl flex items-center justify-around px-4 z-40 shadow-2xl">
+                    <button onclick="switchAndroidTab('dashboard')" id="nav-btn-dashboard" class="flex flex-col items-center text-pink-400 transition">
+                        <i class="fa-solid fa-chart-pie text-sm"></i>
+                        <span class="text-[9px] font-semibold mt-0.5">Home</span>
+                    </button>
+                    <button onclick="switchAndroidTab('transactions')" id="nav-btn-transactions" class="flex flex-col items-center text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-receipt text-sm"></i>
+                        <span class="text-[9px] font-semibold mt-0.5">Buku Kas</span>
+                    </button>
+                    <!-- Floating Action Button (FAB) in middle -->
+                    <button onclick="openAddTxModal()" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pink-600 to-rose-500 text-white flex items-center justify-center shadow-lg shadow-pink-500/40 hover:scale-105 transition -mt-5 border border-pink-400/40">
+                        <i class="fa-solid fa-plus text-base"></i>
+                    </button>
+                    <button onclick="switchAndroidTab('inventory')" id="nav-btn-inventory" class="flex flex-col items-center text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-boxes-stacked text-sm"></i>
+                        <span class="text-[9px] font-semibold mt-0.5">Stok</span>
+                    </button>
+                    <button onclick="shareViaWhatsApp()" class="flex flex-col items-center text-slate-400 hover:text-emerald-400 transition">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span class="text-[9px] font-semibold mt-0.5">Share</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- APK / Manifest Download Modal -->
+    <div id="apkModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center space-x-3">
+                    <img src="https://storage.googleapis.com/gweb-cloud-ml-us-east-4/attachments/232239.png" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-pink-500 glow-neon">
+                    <div>
+                        <h3 class="text-base font-bold">Branded Cyber APK & Manifest</h3>
+                        <p class="text-xs text-slate-400">SATUSO GARAGE Mobile App Distribution</p>
+                    </div>
+                </div>
+                <button onclick="closeApkModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs text-slate-300">
+                <div class="glass-card p-4 rounded-2xl">
+                    <h4 class="font-bold text-pink-400 mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Instalasi PWA / Home Screen</h4>
+                    <p class="text-slate-400 leading-relaxed">Aplikasi dengan estetika cyber modern ini siap diinstal di HP Android Anda. Pilih menu browser dan ketuk <strong>"Tambahkan ke Layar Utama"</strong>.</p>
+                </div>
+
+                <div class="glass-card p-4 rounded-2xl">
+                    <h4 class="font-bold text-blue-400 mb-1"><i class="fa-solid fa-file-code mr-1"></i> Download File Manifest.json</h4>
+                    <p class="text-slate-400 leading-relaxed mb-3">Konfigurasi Web Manifest lengkap dengan identitas logo resmi.</p>
+                    <button onclick="downloadManifest()" class="px-4 py-2 bg-pink-600 hover:bg-pink-500 text-white font-semibold rounded-xl transition shadow-lg shadow-pink-600/30">Download manifest.json</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast Overlay Inside Phone -->
+    <div id="phone-toast" class="absolute top-12 left-4 right-4 bg-slate-900/95 border border-pink-500/40 text-white p-3 rounded-2xl shadow-2xl z-50 hidden transition-all duration-300 flex items-center space-x-3">
+        <img src="https://storage.googleapis.com/gweb-cloud-ml-us-east-4/attachments/232239.png" alt="Logo" class="w-9 h-9 rounded-xl object-cover border border-pink-500 flex-shrink-0 glow-neon">
+        <div class="flex-1 min-w-0">
+            <h5 id="toast-title" class="text-xs font-bold text-pink-300">Notifikasi</h5>
+            <p id="toast-text" class="text-[11px] text-slate-300 truncate">Pesan sistem...</p>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let currentTab = 'dashboard';
+        let transactions = JSON.parse(localStorage.getItem('satuso_modern_tx')) || [
+            { id: 1, date: '2026-10-11', type: 'Pemasukan', category: 'Jasa Servis', method: 'Tunai', amount: 150000, desc: 'Servis Ringan Vario 150' },
+            { id: 2, date: '2026-10-10', type: 'Pemasukan', category: 'Sparepart', method: 'Transfer', amount: 85000, desc: 'Kampas Rem Belakang NMax' },
+            { id: 3, date: '2026-10-09', type: 'Pengeluaran', category: 'Stok', method: 'Transfer', amount: 1200000, desc: 'Restock Oli MPX2 & Busi' }
+        ];
+
+        let inventory = JSON.parse(localStorage.getItem('satuso_modern_inv')) || [
+            { id: 1, name: 'Oli AHM MPX2 0.8L', price: 55000, stock: 24 },
+            { id: 2, name: 'Kampas Rem Beat/Scoopy', price: 45000, stock: 12 },
+            { id: 3, name: 'Servis Ringan & Tune Up', price: 50000, stock: 'Jasa' }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+            setInterval(updateClock, 1000);
+            renderAndroidScreen();
+        });
+
+        function updateClock() {
+            const now = new Date();
+            const h = now.getHours().toString().padStart(2, '0');
+            const m = now.getMinutes().toString().padStart(2, '0');
+            const timeStr = `${h}:${m}`;
+            const el = document.getElementById('phone-time');
+            if(el) el.innerText = timeStr;
+        }
+
+        function saveMobileData() {
+            localStorage.setItem('satuso_modern_tx', JSON.stringify(transactions));
+            localStorage.setItem('satuso_modern_inv', JSON.stringify(inventory));
+        }
+
+        function switchAndroidTab(tab) {
+            currentTab = tab;
+            renderAndroidScreen();
+            
+            // Highlight active navigation button
+            ['dashboard', 'transactions', 'inventory'].forEach(t => {
+                const btn = document.getElementById(`nav-btn-${t}`);
+                if (btn) {
+                    if (t === tab) {
+                        btn.className = "flex flex-col items-center text-pink-400 transition";
+                    } else {
+                        btn.className = "flex flex-col items-center text-slate-400 hover:text-white transition";
+                    }
+                }
+            });
+        }
+
+        function triggerVibration() {
+            const frame = document.getElementById('phone-container');
+            frame.classList.add('vibrating');
+            setTimeout(() => {
+                frame.classList.remove('vibrating');
+            }, 200);
+            triggerNotification('SATUSO GARAGE', 'Haptic feedback cyber aktif.');
+        }
+
+        function androidBack() {
+            if (currentTab !== 'dashboard') {
+                switchAndroidTab('dashboard');
+            } else {
+                triggerNotification('SATUSO GARAGE', 'Berada di beranda aplikasi.');
+            }
+        }
+
+        function triggerNotification(title, text) {
+            const toast = document.getElementById('phone-toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-text').innerText = text;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        function formatIDR(num) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+        }
+
+        // Render Android Screen with Cyber-Modern Aesthetic
+        function renderAndroidScreen() {
+            const screen = document.getElementById('android-screen');
+            screen.innerHTML = '';
+
+            let headerBar = `
+                <div class="px-4 py-3 bg-slate-900/90 border-b border-pink-500/20 flex justify-between items-center backdrop-blur-md">
+                    <div class="flex items-center space-x-2.5">
+                        <img src="https://storage.googleapis.com/gweb-cloud-ml-us-east-4/attachments/232239.png" alt="Logo" class="w-7 h-7 rounded-xl object-cover border border-pink-500 shadow glow-neon">
+                        <span class="text-xs font-extrabold font-racing tracking-wide bg-gradient-to-r from-pink-400 to-white bg-clip-text text-transparent">SATUSO GARAGE</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span class="text-[10px] text-emerald-400 font-mono">ONLINE</span>
+                    </div>
+                </div>
+            `;
+
+            let bodyContent = '';
+
+            if (currentTab === 'dashboard') {
+                let totalInc = transactions.filter(t => t.type === 'Pemasukan').reduce((a,b)=>a+b.amount,0);
+                let totalExp = transactions.filter(t => t.type === 'Pengeluaran').reduce((a,b)=>a+b.amount,0);
+                let net = totalInc - totalExp;
+
+                bodyContent = `
+                    <div class="flex-1 p-4 pb-20 overflow-y-auto custom-scrollbar space-y-3.5">
+                        <!-- Futuristic Cyber Hero Widget -->
+                        <div class="relative bg-gradient-to-br from-slate-900 via-pink-950/60 to-slate-950 border border-pink-500/40 p-4 rounded-3xl shadow-2xl overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-pink-500/20 rounded-full blur-2xl pointer-events-none"></div>
+                            
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center space-x-2.5">
+                                    <img src="https://storage.googleapis.com/gweb-cloud-ml-us-east-4/attachments/232239.png" alt="Logo" class="w-9 h-9 rounded-xl object-cover border border-pink-500 glow-neon">
+                                    <div>
+                                        <h4 class="text-xs font-bold font-racing text-pink-300">SATUSO GARAGE</h4>
+                                        <span class="text-[9px] text-slate-400">Cyber Intelligence System</span>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-0.5 bg-pink-500/20 border border-pink-500/40 rounded-full text-[9px] font-semibold text-pink-300">Live</span>
+                            </div>
+
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Laba Bersih (Net Profit)</span>
+                            <h3 class="text-2xl font-extrabold mt-0.5 text-pink-400 glow-text">${formatIDR(net)}</h3>
+                            
+                            <div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-800/80 text-[11px]">
+                                <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                                    <span class="text-[9px] text-slate-400 block">Pemasukan</span>
+                                    <strong class="text-emerald-400 font-mono">${formatIDR(totalInc)}</strong>
+                                </div>
+                                <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                                    <span class="text-[9px] text-slate-400 block">Pengeluaran</span>
+                                    <strong class="text-rose-400 font-mono">${formatIDR(totalExp)}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Action Card -->
+                        <div class="glass-card p-3.5 rounded-2xl flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold">Catat Servis Cepat</h4>
+                                    <span class="text-[10px] text-slate-400">Tambah pendapatan baru</span>
+                                </div>
+                            </div>
+                            <button onclick="openAddTxModal()" class="px-3 py-1.5 bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-500 hover:to-rose-400 text-white text-[11px] font-bold rounded-xl transition shadow-lg shadow-pink-600/30">Catat</button>
+                        </div>
+
+                        <!-- Recent Transactions -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Transaksi Terbaru</h4>
+                                <button onclick="switchAndroidTab('transactions')" class="text-[10px] text-pink-400 font-semibold hover:underline">Semua →</button>
+                            </div>
+                            <div class="space-y-2">
+                                ${transactions.slice(0, 4).map(t => `
+                                    <div class="glass-card p-3 rounded-2xl flex justify-between items-center text-xs">
+                                        <div>
+                                            <span class="font-semibold text-slate-200 block truncate max-w-[150px]">${t.desc}</span>
+                                            <span class="text-[10px] text-slate-400">${t.date} • ${t.category}</span>
+                                        </div>
+                                        <span class="font-mono font-bold ${t.type==='Pemasukan'?'text-emerald-400':'text-rose-400'}">
+                                            ${t.type==='Pemasukan'?'+':'-'}${formatIDR(t.amount)}
+                                        </span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentTab === 'transactions') {
+                bodyContent = `
+                    <div class="flex-1 p-4 pb-20 overflow-y-auto custom-scrollbar space-y-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Buku Kas Bengkel</h4>
+                            <button onclick="openAddTxModal()" class="px-3 py-1 bg-gradient-to-r from-pink-600 to-rose-500 text-white text-[10px] font-bold rounded-xl shadow-lg shadow-pink-600/30">+ Transaksi</button>
+                        </div>
+                        <div class="space-y-2">
+                            ${transactions.map(t => `
+                                <div class="glass-card p-3 rounded-2xl relative">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <span class="px-2 py-0.5 rounded-md text-[9px] font-bold ${t.type==='Pemasukan'?'bg-emerald-500/20 text-emerald-400':'bg-rose-500/20 text-rose-400'}">${t.type}</span>
+                                        <span class="text-[10px] text-slate-400 font-mono">${t.date}</span>
+                                    </div>
+                                    <h5 class="text-xs font-bold text-slate-200 mb-1">${t.desc}</h5>
+                                    <div class="flex justify-between items-center text-[11px] pt-1 border-t border-slate-800/80">
+                                        <span class="text-slate-400">${t.category} (${t.method})</span>
+                                        <span class="font-mono font-bold ${t.type==='Pemasukan'?'text-emerald-400':'text-rose-400'}">${formatIDR(t.amount)}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (currentTab === 'inventory') {
+                bodyContent = `
+                    <div class="flex-1 p-4 pb-20 overflow-y-auto custom-scrollbar space-y-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Katalog Sparepart & Jasa</h4>
+                            <button onclick="shareViaWhatsApp()" class="px-3 py-1 bg-emerald-600 text-white text-[10px] font-bold rounded-xl shadow-lg shadow-emerald-600/30"><i class="fa-brands fa-whatsapp mr-1"></i> Share Nota</button>
+                        </div>
+                        <div class="space-y-2">
+                            ${inventory.map(i => `
+                                <div class="glass-card p-3 rounded-2xl flex justify-between items-center">
+                                    <div>
+                                        <h5 class="text-xs font-bold text-slate-200">${i.name}</h5>
+                                        <span class="text-[10px] text-slate-400">Stok: <strong class="text-pink-400">${i.stock}</strong></span>
+                                    </div>
+                                    <span class="font-mono text-xs font-bold text-emerald-400">${formatIDR(i.price)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            screen.innerHTML = headerBar + bodyContent;
+        }
+
+        function openAddTxModal() {
+            const desc = prompt('Keterangan Servis / Pelanggan:') || 'Servis Rutin';
+            const amount = parseFloat(prompt('Nominal Transaksi (Rp):')) || 75000;
+            transactions.unshift({
+                id: Date.now(),
+                date: new Date().toISOString().split('T')[0],
+                type: 'Pemasukan',
+                category: 'Jasa Servis',
+                method: 'Tunai',
+                amount: amount,
+                desc: desc
+            });
+            saveMobileData();
+            renderAndroidScreen();
+            triggerNotification('SATUSO GARAGE', `Transaksi ${desc} berhasil dicatat!`);
+        }
+
+        function shareViaWhatsApp() {
+            let totalInc = transactions.filter(t => t.type === 'Pemasukan').reduce((a,b)=>a+b.amount,0);
+            let text = `*SATUSO GARAGE WORKSHOP*%0A🔧 _Cyber Financial & Service Report_%0A----------------------------------%0ATotal Pemasukan: *${formatIDR(totalInc)}*%0AJumlah Transaksi: ${transactions.length} tercatat.%0A----------------------------------%0A_Terima kasih telah mempercayakan kendaraan Anda di SATUSO GARAGE!_`;
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        }
+
+        function resetAppData() {
+            if (confirm('Reset seluruh data transaksi demo?')) {
+                localStorage.removeItem('satuso_modern_tx');
+                location.reload();
+            }
+        }
+
+        function openApkModal() {
+            document.getElementById('apkModal').classList.remove('hidden');
+            document.getElementById('apkModal').classList.add('flex');
+        }
+
+        function closeApkModal() {
+            document.getElementById('apkModal').classList.remove('flex');
+            document.getElementById('apkModal').classList.add('hidden');
+        }
+
+        function downloadManifest() {
+            const manifest = {
+                name: "SATUSO GARAGE Cyber Mobile",
+                short_name: "SatusoGarage",
+                start_url: "/",
+                display: "standalone",
+                background_color: "#030712",
+                theme_color: "#ec4899",
+                icons: [{ src: "https://storage.googleapis.com/gweb-cloud-ml-us-east-4/attachments/232239.png", sizes: "192x192", type: "image/png" }]
+            };
+            const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'manifest.json';
+            a.click();
+        }
+    </script>
+</body>
+</html>
